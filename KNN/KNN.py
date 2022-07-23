@@ -50,16 +50,6 @@ if __name__ == "__main__":
     k_near_Neighbors.fit(train_data, train_labels)
     predictions = k_near_Neighbors.predict(test_data,K=7)
     accuracy = accuracy_score(predictions, test_labels)
-    print("accuracy : ",accuracy)
-
-    # colours = ('green', 'red', 'blue')
-    # n_classes = 3
-    # for n_class in range(0, n_classes):
-    #     plt.scatter(train_data[train_labels==n_class, 0], train_data[train_labels==n_class, 1], c=colours[n_class], s=20, label=str(n_class))
-    #     plt.scatter(test_data[test_labels==n_class, 0], test_data[test_labels==n_class, 1], c=colours[n_class], s=80)
-    # plt.legend(loc='upper right');
-    # plt.show()
-
 
 
 

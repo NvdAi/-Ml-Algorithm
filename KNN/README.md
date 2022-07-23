@@ -1,0 +1,3 @@
+# Ml-Algorithm
+k-Nearest Neighbors or KNN 
+In this algorithm, we have prepared a numerical database in two-dimensional space and saved it as a text file... These data are classified into three different classes Based on the concepts of knn algorithm; Each unknown sample is labeled according to the vote of the majority of labels in k nearest neighbors based on Euclidean distance calculation... I wrote this code in the form of a class and compared the result with the sklearn library.

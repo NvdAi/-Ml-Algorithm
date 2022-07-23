@@ -7,20 +7,17 @@ import numpy as np
 import random
 from KNN import Knn
 
-
 centers = [[2, 3], [5, 5], [1, 8]]
 n_classes = len(centers)
 data, labels = make_blobs(n_samples=300,  centers=np.array(centers),random_state=None,cluster_std=2)
 res = train_test_split(data, labels, train_size=0.8, test_size=0.2, random_state=None)
 train_data, test_data, train_labels, test_labels = res 
-# print(train_data,  train_labels,test_data, test_labels)
 
 k = 7
 # scikit leartn class
 scikitknn = KNeighborsClassifier(n_neighbors=k)
 # my class
 nvdknn = Knn(n_neighbors=k)
-
 # compare two object
 knnList = [scikitknn, nvdknn]
 knnList_name = ["scikitknn", "nvdknn"]
@@ -31,8 +28,6 @@ for i,knn in enumerate(knnList):
     acc = accuracy_score(predicted, test_labels)
     acc_list.append(acc)
     print(" the best accuracy_score of",knnList_name[i]+' =', acc)
-
-# visya
 
 plt.figure("KNN ALGORITHM")
 plt.subplot(1,2,1)
@@ -52,11 +47,3 @@ plt.xlim(5, k+3)
 plt.xticks(np.arange(k,k+2), ['7', '7'])
 plt.legend(loc='upper right')
 plt.show()
-
-# git clone
-# git pull
-# git push 
-# git add .
-# git commit 
-# git branch 
-
