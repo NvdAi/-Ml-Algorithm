@@ -22,6 +22,6 @@ ponit* : we should find the best attribute and best division threshold to divide
 10- for each node ,check it   if node is pure return sample labels  else  reoeat the all ateps for now data in each node
 
 
-I have 3 codes   DT.py is my decision tree structure      node.py id my node info calss     Dtree.py is main for run
+I have 3 codes   DT.py is my decision tree structure      node.py id my node info calss     Dtree.py is main for run.
 
 
