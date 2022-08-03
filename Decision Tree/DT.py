@@ -179,3 +179,10 @@ class DT_TREE :
             print("Accuracy of label",key,"=",acc)
         acc_all = acc_all/len(org_labels)
         print("Accuracy of all data = ",acc_all)
+    
+
+    def predict(self, data: np.ndarray)->np.ndarray:
+        """
+        This function get an 2D-array as n samples and returns prediction vector for each sample
+        """
+
