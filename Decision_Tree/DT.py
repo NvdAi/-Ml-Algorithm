@@ -142,8 +142,9 @@ class DT_TREE :
         self.nodenumber+=1
         self.fit(left_data, left_labels)
    
-    def test(self,test_data):
+    def Predict(self,test_data):
         print("*****************************  TEST  ************************************")
+        pred_list = []
         for item in test_data:
             nd=self.nodes[0]
             label = False
@@ -152,6 +153,7 @@ class DT_TREE :
                     division_thresh = nd.Nleft
                     if division_thresh[0]==-1:
                         self.decision[division_thresh[1]]+=1
+                        pred_list.append(division_thresh[1])
                         label = True
                     else:
                         nd = self.nodes[division_thresh[0]]
@@ -159,9 +161,11 @@ class DT_TREE :
                     division_thresh = nd.Nright
                     if division_thresh[0]==-1:
                         self.decision[division_thresh[1]]+=1
+                        pred_list.append(division_thresh[1])
                         label = True
                     else:
                         nd = self.nodes[division_thresh[0]]
+        return np.array(pred_list)
 
     def accuracy(self, test_labels):
         print("*****************************  EVALUATION ********************************")
@@ -181,8 +185,8 @@ class DT_TREE :
         print("Accuracy of all data = ",acc_all)
     
 
-    def predict(self, data: np.ndarray)->np.ndarray:
-        """
-        This function get an 2D-array as n samples and returns prediction vector for each sample
-        """
+    # def predict(self, data: np.ndarray)->np.ndarray:
+    #     """
+    #     This function get an 2D-array as n samples and returns prediction vector for each sample
+    #     """
 
