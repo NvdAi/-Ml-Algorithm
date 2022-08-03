@@ -3,24 +3,16 @@ import collections
 import numpy as np
 from copy import copy
 from node import Node_info
+import os
 
 class DT_TREE :
-    def __init__(self, dirc):
-        self.data = np.loadtxt(dirc)
+    def __init__(self):
         self.atrr_THRESHOLDS_SAVE = []
         self.RIGHT_NODE_LIST = []
         self.decision = {0:0, 1:0, 2:0}
         self.nodes = {}
         self.nodenumber = 0
  
-    def data_partition(self,P):
-        division = int(len(self.data) * P/100)
-        train = self.data[:division]
-        train_labels = train[:,train.shape[1]-1]
-        test = self.data[division: ,]
-        test_labels = test[:,train.shape[1]-1]
-        return train, train_labels, test, test_labels
-    
     def get_Thresholdslist_of_attrs(self,train, attr):
         Threshholds_list = []
         temp_data = train[:,attr]
@@ -142,11 +134,14 @@ class DT_TREE :
         self.nodenumber+=1
         self.fit(left_data, left_labels)
    
-    def Predict(self,test_data):
+    def Predict(self, model,test_data: np.ndarray)->np.ndarray:
+        """
+        This function get an 2D-array as n samples and returns prediction vector for each sample
+        """
         print("*****************************  TEST  ************************************")
         pred_list = []
         for item in test_data:
-            nd=self.nodes[0]
+            nd=model.item().get(0)
             label = False
             while (label==False) :
                 if item[nd.n_attr] >= nd.threshold:
@@ -156,7 +151,7 @@ class DT_TREE :
                         pred_list.append(division_thresh[1])
                         label = True
                     else:
-                        nd = self.nodes[division_thresh[0]]
+                        nd = model.item().get(division_thresh[0])
                 else:
                     division_thresh = nd.Nright
                     if division_thresh[0]==-1:
@@ -164,15 +159,15 @@ class DT_TREE :
                         pred_list.append(division_thresh[1])
                         label = True
                     else:
-                        nd = self.nodes[division_thresh[0]]
+                        nd = model.item().get(division_thresh[0])
         return np.array(pred_list)
 
     def accuracy(self, test_labels):
         print("*****************************  EVALUATION ********************************")
         org_labels = dict(collections.Counter( test_labels))
         org_labels = dict(sorted(org_labels.items()))
-        print("orginal labels :", org_labels)      
-        print("Pred labels : ", self.decision)  
+        print("orginal labels test  :", org_labels)      
+        print("Pred labels  : ", self.decision)  
         acc_all = 0
         for key in org_labels:
             if self.decision[key]<org_labels[key]:
@@ -184,9 +179,12 @@ class DT_TREE :
         acc_all = acc_all/len(org_labels)
         print("Accuracy of all data = ",acc_all)
     
-
-    # def predict(self, data: np.ndarray)->np.ndarray:
-    #     """
-    #     This function get an 2D-array as n samples and returns prediction vector for each sample
-    #     """
-
+    def save_model(self):
+        os.makedirs("../Models", exist_ok=True)
+        np.save("../Models/model" , self.nodes)
+    
+    def load_model(self):
+        model = np.load('../Models/model.npy', allow_pickle=True)
+        return model
+        
+        
