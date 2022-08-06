@@ -1,16 +1,6 @@
 from Baging import BAGING
 from DT import DT_TREE
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import numpy as np
-
-DATA = np.loadtxt("../dataset/iris.txt")
-LABELS = DATA[:,DATA.shape[1]-1]
-train_data, test_data, train_labels, test_labels = train_test_split(DATA, LABELS, train_size=0.8, test_size=0.2, random_state=None)
-train_data = train_data[:100,:]
-test_data = test_data[:10,:]
-train_labels = train_labels[:10]
-test_labels = test_labels[:10]
 
 
 class RF():
@@ -47,6 +37,7 @@ class RF():
             bg = test_data[:,test_data.shape[1]-1]
             model = item[0]
             indexs = item[1]
+
             for idx in indexs:
                 arrtibute = test_data[:,idx]
                 bg = np.vstack((bg,arrtibute))
@@ -62,7 +53,7 @@ class RF():
             pred_list = []
             for item in new_test_data:
                 mod = model.nodes
-                nd=mod[0]
+                nd = mod[0]
 
                 label = False
                 while (label==False) :
@@ -91,13 +82,4 @@ class RF():
         print(self.trees_pred)
         final_pred = self.majority_vote()
         return final_pred
-
-RF_MODEL = RF(4,50)
-RF_MODEL.fit(train_data, train_labels)
-pred = RF_MODEL.predict(test_data)
-print("==================================================")
-print("test_labes : ", test_labels,"\n","pred_labels : ",pred)
-print("==================================================")
-acc = accuracy_score(test_labels, pred)
-print("accuracy is : ",acc)   
 
