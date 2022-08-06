@@ -39,3 +39,6 @@ class BAGING :
         N_D_L = self.MAKE_DATA()  
         return N_D_L , self.attr_indx_list
 
+if __name__ == "__main__":
+    test = BAGING("iris.txt", 4, 50)
+    test.BG()
