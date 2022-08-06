@@ -1,35 +1,28 @@
 from sklearn import datasets
-import collections
-import numpy as np
 from copy import copy
 from node import Node_info
+import collections
+import numpy as np
+import pickle
 import os
 
 class DT_TREE :
     def __init__(self):
         self.atrr_THRESHOLDS_SAVE = []
         self.RIGHT_NODE_LIST = []
-        self.decision = {0:0, 1:0, 2:0}
         self.nodes = {}
         self.nodenumber = 0
  
     def get_Thresholdslist_of_attrs(self,train, attr):
         Threshholds_list = []
         temp_data = train[:,attr]
-        # print("===========",temp_data,"===========")
         temp_data = set(temp_data)
         temp_data = sorted(temp_data)
-        # print("===========set tre ",temp_data,"===========")
-        
         Threshholds_list=[]
         for i in range(0,len(temp_data)-1):
             Threshholds_list.append((temp_data[i]+temp_data[i+1])/2)  
-        # print("===========set ",len(Threshholds_list),"===========")
- 
         Threshholds_list = set(Threshholds_list)
         Threshholds_list = sorted(Threshholds_list)
-        # print("===========set ",len(Threshholds_list),"===========")
-
         return Threshholds_list
 
     def gini_calculater(self, rcl):
@@ -60,8 +53,6 @@ class DT_TREE :
 
     def find_gini(self,train,train_labels,Threshholds_list,Attr):
         gini_list = []
-        # print("tresh list = " ,Threshholds_list)
-        # print("============================")
         for thresh in Threshholds_list:
             rowsLeft = np.where(train[:,Attr]>=thresh)[0]
             rowsRight = np.where(train[:,Attr]<thresh)[0]
@@ -70,7 +61,6 @@ class DT_TREE :
             root_and_child_list = [train_labels, labelsLeft,labelsRight]
             gini =  self.gini_calculater(root_and_child_list)
             gini_list.append(gini)
-        # print("gini list",gini_list)
         return min(gini_list) , gini_list.index(min(gini_list))
 
     def best_attr_threshold(self, train, train_labels):
@@ -78,11 +68,14 @@ class DT_TREE :
         thresh_all_attr = []
         for attr in  range(train.shape[1]-1):
             Threshholds_list = self.get_Thresholdslist_of_attrs(train,attr)
-            # print("tresh list = " ,Threshholds_list)
-
-            ig, ig_indx = self.find_gini(train,train_labels,Threshholds_list,attr)
-            gini_all_attr.append(ig)
-            thresh_all_attr.append(Threshholds_list[ig_indx])
+            if Threshholds_list == []:
+                gini_all_attr.append(1)
+                thresh_all_attr.append(-1)
+                # print("Threshholds_list  khaliyeeeeeeeeeee")
+            else:
+                gini, gini_indx = self.find_gini(train,train_labels,Threshholds_list,attr)
+                gini_all_attr.append(gini)
+                thresh_all_attr.append(Threshholds_list[gini_indx])
         thresh_indx = gini_all_attr.index(min(gini_all_attr))
         threshold = thresh_all_attr[thresh_indx]
         return thresh_indx, threshold
@@ -97,7 +90,7 @@ class DT_TREE :
                     N.Nleft = (-1,int(key[0])) 
                 else:
                     N.Nright = (-1,int(key[0])) 
-            elif NODE_SAMPELS<=6:
+            elif NODE_SAMPELS<=5:
                 values = list(nod.values())
                 keys = list(nod.keys())
                 max_value_indx = values.index(max(values))
@@ -132,17 +125,11 @@ class DT_TREE :
         said_nodes_indx = [node_Left_indx, node_Right_indx]
         child_node_labels = [labelsLeft, labelsRight]
         new_said_data = []
-
-        NSD = self.check_childs_node(said_nodes_indx,child_node_labels,new_said_data,train,N)
+        NSD = self.check_childs_node(said_nodes_indx,child_node_labels,new_said_data,train,N)   #node side data
 
         if NSD == []:
             if self.RIGHT_NODE_LIST==[]:
-                print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DECISION TREE COMPLATED  >>>>>>>>>>>>>>>>>>>>>>>>")
-                # print(self.nodes)
-                # for k in self.nodes.keys():
-                #     s = self.nodes[k]
-                #     print(s.n_attr,s.threshold, s.Nleft, s.Nright,)
-
+                # print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DECISION TREE COMPLATED  >>>>>>>>>>>>>>>>>>>>>>>>")
                 return 
             NSD.append(self.RIGHT_NODE_LIST[-1])
             del self.RIGHT_NODE_LIST[-1]
@@ -152,40 +139,36 @@ class DT_TREE :
         self.fit(left_data, left_labels)
    
     def Predict(self,test_data: np.ndarray)->np.ndarray:
-        """
-        This function get an 2D-array as n samples and returns prediction vector for each sample
-        """
-        print("*****************************  TEST  ************************************")
+        # print("*****************************  TEST  ************************************")
         pred_list = []
         for item in test_data:
-            nd=self.nodes[0]
-            # print(nd.threshold,nd.n_attr,nd.Nleft,nd.Nright)
-            # aa
+            model=self.nodes[0]            
             label = False
             while (label==False) :
-                if item[nd.n_attr] >= nd.threshold:
-                    division_thresh = nd.Nleft
+                if item[model.n_attr] >= model.threshold:
+                    division_thresh = model.Nleft
                     if division_thresh[0]==-1:
-                        self.decision[division_thresh[1]]+=1
                         pred_list.append(division_thresh[1])
                         label = True
                     else:
-                        nd = self.nodes[division_thresh[0]]
+                        model = self.nodes[division_thresh[0]]
                 else:
-                    division_thresh = nd.Nright
+                    division_thresh = model.Nright
                     if division_thresh[0]==-1:
-                        self.decision[division_thresh[1]]+=1
                         pred_list.append(division_thresh[1])
                         label = True
                     else:
-                        nd = self.nodes[division_thresh[0]] 
+                        model = self.nodes[division_thresh[0]] 
         return pred_list
+    
     def save_model(self):
         os.makedirs("../Models", exist_ok=True)
-        np.save("../Models/model" , self.nodes)
+        with open('../Models/model.pickle', 'wb') as handle:
+            pickle.dump(self.nodes, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
     def load_model(self):
-        model = np.load('../Models/model.npy', allow_pickle=True)
+        with open('../Models/model.pickle', 'rb') as handle:
+            model = pickle.load(handle)
         return model
         
         

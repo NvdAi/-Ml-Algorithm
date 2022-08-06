@@ -1,15 +1,15 @@
 from sklearn import datasets
-import collections
-import numpy as np
 from copy import copy
 from node import Node_info
+import collections
+import numpy as np
+import pickle
 import os
 
 class DT_TREE :
     def __init__(self):
         self.atrr_THRESHOLDS_SAVE = []
         self.RIGHT_NODE_LIST = []
-        self.decision = {0:0, 1:0, 2:0}
         self.nodes = {}
         self.nodenumber = 0
  
@@ -20,7 +20,7 @@ class DT_TREE :
         temp_data = sorted(temp_data)
         Threshholds_list=[]
         for i in range(0,len(temp_data)-1):
-            Threshholds_list.append((temp_data[i]+temp_data[i+1])/2)   
+            Threshholds_list.append((temp_data[i]+temp_data[i+1])/2)  
         Threshholds_list = set(Threshholds_list)
         Threshholds_list = sorted(Threshholds_list)
         return Threshholds_list
@@ -68,9 +68,14 @@ class DT_TREE :
         thresh_all_attr = []
         for attr in  range(train.shape[1]-1):
             Threshholds_list = self.get_Thresholdslist_of_attrs(train,attr)
-            ig, ig_indx = self.find_gini(train,train_labels,Threshholds_list,attr)
-            gini_all_attr.append(ig)
-            thresh_all_attr.append(Threshholds_list[ig_indx])
+            if Threshholds_list == []:
+                gini_all_attr.append(1)
+                thresh_all_attr.append(-1)
+                print("Threshholds_list  khaliyeeeeeeeeeee")
+            else:
+                gini, gini_indx = self.find_gini(train,train_labels,Threshholds_list,attr)
+                gini_all_attr.append(gini)
+                thresh_all_attr.append(Threshholds_list[gini_indx])
         thresh_indx = gini_all_attr.index(min(gini_all_attr))
         threshold = thresh_all_attr[thresh_indx]
         return thresh_indx, threshold
@@ -120,8 +125,7 @@ class DT_TREE :
         said_nodes_indx = [node_Left_indx, node_Right_indx]
         child_node_labels = [labelsLeft, labelsRight]
         new_said_data = []
-
-        NSD = self.check_childs_node(said_nodes_indx,child_node_labels,new_said_data,train,N)
+        NSD = self.check_childs_node(said_nodes_indx,child_node_labels,new_said_data,train,N)   #node side data
 
         if NSD == []:
             if self.RIGHT_NODE_LIST==[]:
@@ -134,57 +138,37 @@ class DT_TREE :
         self.nodenumber+=1
         self.fit(left_data, left_labels)
    
-    def Predict(self, model,test_data: np.ndarray)->np.ndarray:
-        """
-        This function get an 2D-array as n samples and returns prediction vector for each sample
-        """
+    def Predict(self,test_data: np.ndarray)->np.ndarray:
         print("*****************************  TEST  ************************************")
         pred_list = []
         for item in test_data:
-            nd=model.item().get(0)
+            model=self.nodes[0]            
             label = False
             while (label==False) :
-                if item[nd.n_attr] >= nd.threshold:
-                    division_thresh = nd.Nleft
+                if item[model.n_attr] >= model.threshold:
+                    division_thresh = model.Nleft
                     if division_thresh[0]==-1:
-                        self.decision[division_thresh[1]]+=1
                         pred_list.append(division_thresh[1])
                         label = True
                     else:
-                        nd = model.item().get(division_thresh[0])
+                        model = self.nodes[division_thresh[0]]
                 else:
-                    division_thresh = nd.Nright
+                    division_thresh = model.Nright
                     if division_thresh[0]==-1:
-                        self.decision[division_thresh[1]]+=1
                         pred_list.append(division_thresh[1])
                         label = True
                     else:
-                        nd = model.item().get(division_thresh[0])
-        return np.array(pred_list)
-
-    def accuracy(self, test_labels):
-        print("*****************************  EVALUATION ********************************")
-        org_labels = dict(collections.Counter( test_labels))
-        org_labels = dict(sorted(org_labels.items()))
-        print("orginal labels test  :", org_labels)      
-        print("Pred labels  : ", self.decision)  
-        acc_all = 0
-        for key in org_labels:
-            if self.decision[key]<org_labels[key]:
-                acc = self.decision[key]/org_labels[key]
-            else:
-                acc = org_labels[key]/self.decision[key]
-            acc_all +=acc
-            print("Accuracy of label",key,"=",acc)
-        acc_all = acc_all/len(org_labels)
-        print("Accuracy of all data = ",acc_all)
+                        model = self.nodes[division_thresh[0]] 
+        return pred_list
     
     def save_model(self):
         os.makedirs("../Models", exist_ok=True)
-        np.save("../Models/model" , self.nodes)
+        with open('../Models/model.pickle', 'wb') as handle:
+            pickle.dump(self.nodes, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
     def load_model(self):
-        model = np.load('../Models/model.npy', allow_pickle=True)
+        with open('../Models/model.pickle', 'rb') as handle:
+            model = pickle.load(handle)
         return model
         
         

@@ -9,25 +9,12 @@ train_data, test_data, train_labels, test_labels = train_test_split(DATA, LABELS
 
 MODEL = DT_TREE()
 MODEL.fit(train_data, train_labels)
-MODEL.save_model()
+# MODEL.save_model()
+# model = Model.load_model() 
+pred_labels = MODEL.Predict( test_data)
 
-dt = DT_TREE()
-model = dt.load_model() 
-p = model.item().keys()
-print("===========node info============")
-for i in p:
-        s=model.item().get(i)
-        print(i,"==",s.threshold,
-        s.n_attr,
-        s.Nleft,
-        s.Nright)
-print("=========== test data ============")
-print(test_data)
-pred_labels = dt.Predict(model, test_data)
-print("=========== pred and acc by me ============")
 print("test labels :", test_labels)
 print("pred_labels is :",pred_labels)
-dt.accuracy(test_labels)
-print("=================================")
+print("============================")
 acc = accuracy_score(test_labels,pred_labels)
-print("accuracy by skl ",acc)
+print("accuracy is : ",acc)
