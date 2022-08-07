@@ -71,7 +71,7 @@ class DT_TREE :
             if Threshholds_list == []:
                 gini_all_attr.append(1)
                 thresh_all_attr.append(-1)
-                print("Threshholds_list  khaliyeeeeeeeeeee")
+                # print("Threshholds_list  khaliyeeeeeeeeeee")
             else:
                 gini, gini_indx = self.find_gini(train,train_labels,Threshholds_list,attr)
                 gini_all_attr.append(gini)
@@ -129,7 +129,7 @@ class DT_TREE :
 
         if NSD == []:
             if self.RIGHT_NODE_LIST==[]:
-                print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DECISION TREE COMPLATED  >>>>>>>>>>>>>>>>>>>>>>>>")
+                # print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DECISION TREE COMPLATED  >>>>>>>>>>>>>>>>>>>>>>>>")
                 return 
             NSD.append(self.RIGHT_NODE_LIST[-1])
             del self.RIGHT_NODE_LIST[-1]
@@ -139,7 +139,7 @@ class DT_TREE :
         self.fit(left_data, left_labels)
    
     def Predict(self,test_data: np.ndarray)->np.ndarray:
-        print("*****************************  TEST  ************************************")
+        # print("*****************************  TEST  ************************************")
         pred_list = []
         for item in test_data:
             model=self.nodes[0]            
@@ -168,7 +168,7 @@ class DT_TREE :
     
     def load_model(self):
         with open('../Models/model.pickle', 'rb') as handle:
-            model = pickle.load(handle)
-        return model
+            self.nodes = pickle.load(handle)
+        
         
         

@@ -168,7 +168,7 @@ class DT_TREE :
     
     def load_model(self):
         with open('../Models/model.pickle', 'rb') as handle:
-            model = pickle.load(handle)
-        return model
+            self.nodes = pickle.load(handle)
+        
         
         

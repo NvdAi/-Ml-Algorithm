@@ -9,9 +9,12 @@ train_data, test_data, train_labels, test_labels = train_test_split(DATA, LABELS
 
 MODEL = DT_TREE()
 MODEL.fit(train_data, train_labels)
-# MODEL.save_model()
-# model = Model.load_model() 
 pred_labels = MODEL.Predict( test_data)
+
+# MODEL.save_model()
+# model = DT_TREE()
+# model.load_model() 
+# pred_labels = model.Predict( test_data)
 
 print("test labels :", test_labels)
 print("pred_labels is :",pred_labels)
