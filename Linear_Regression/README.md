@@ -18,6 +18,7 @@ https://towardsdatascience.com/understanding-the-ols-method-for-simple-linear-re
 
 and also i used to "Root Mean Squared Error"  to find my code predect error.
 
-figure
-<img src=data/Figure_1.png" width="1200" height="600">
+#### figure:
+
+<img src="data/Figure_1.png" width="1200" height="600">
 
