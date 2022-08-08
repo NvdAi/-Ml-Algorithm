@@ -1,19 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 import csv
 import random
+import os
 
 class LEANER_REGRASSION():
     def __init__(self):
-        pass
+        self.parametrs = 0
     
     def PLOT(self,data,line_points):
         plt.scatter(data[:,0],data[:,1],c="r",s=20)
         plt.plot(line_points[0],line_points[1],c="b",marker="o", markersize=10)
-        pass
 
-    def evalute(self,data,Beta_0,Beta_1):
+    def evalute(self,data):
         Y_PRED = []
+        Beta_0 ,Beta_1 = self.parametrs
         for x in data[:,0]:
             Y = Beta_0+(Beta_1*x)
             Y_PRED.append(Y)
@@ -21,7 +23,8 @@ class LEANER_REGRASSION():
         error = np.power(error,2)
         RMSE = np.sqrt(sum(error)/data.shape[0])    # Root Mean Squared Error
         line_points = [[np.min(data[:,0]), np.max(data[:,0])],[min(Y_PRED),max(Y_PRED)]]
-        return RMSE, line_points
+        self.PLOT(data,line_points)
+        return Beta_0 ,Beta_1 ,RMSE
 
     def fit(self, data):
         averages = np.mean(data, axis=0)
@@ -30,24 +33,17 @@ class LEANER_REGRASSION():
         DOWN_Division = sum(np.power(temp[:,0],2))
         Beta_1 = UP_Division/DOWN_Division
         Beta_0 = averages[1] - (Beta_1 * averages[0])
-        RMSE, line_points = self.evalute(data,Beta_0,Beta_1)
-        self.PLOT(data,line_points)
-        print("Beta_0:",Beta_0,"\nBeta_1:",Beta_1,"\nMean Squared Error:",RMSE)
-
-rows = []
-with open("./income.data/income.data.csv", 'r') as csvfile:
-    csvreader= csv.reader(csvfile)
-    fields = next(csvreader)
-    for row in csvreader:
-        rows.append(row)
-data = np.array(rows)
-data = np.asarray(data, dtype=float)
-data = data[:,1:3]
-# data = np.array([[1,1],[2,3],[4,3],[3,2],[5,5]])
-
-SLR = LEANER_REGRASSION()
-SLR.fit(data)
-plt.show()
+        self.parametrs = [Beta_0,Beta_1]
+    
+    def save_model(self):
+        os.makedirs("../Models", exist_ok=True)
+        with open('../Models/model.pickle', 'wb') as handle:
+            pickle.dump(self.parametrs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    def load_model(self):
+        with open('../Models/model.pickle', 'rb') as handle:
+            self.parametrs = pickle.load(handle)
+    
 
 
 
