@@ -35,19 +35,6 @@ class Multiple_Linear_Regrassion:
         error = np.power(error,2)
         RMSE = np.sqrt(sum(error)/pred.shape[0])
         return RMSE 
-    
-    def visulaze(self,X_train,Y_train):
-        minimum = np.min(X_train,axis=0)
-        maximum = np.max(X_train,axis=0)
-        var = np.vstack((minimum,maximum))
-        ones_ = np.ones(var.shape[0])
-        X = np.c_[ones_,var]
-        result = np.dot(X,self.thetas)
-        ax = plt.axes(projection ='3d')
-        points = np.c_[var,result]
-        ax.plot3D(points[:,0], points[:,1], points[:,2],c="r",marker="o")
-        ax.scatter3D(X_train[:,0], X_train[:,1], Y_train)
-        plt.show()
 
     def save_model(self):
         os.makedirs("../Models", exist_ok=True)
@@ -57,6 +44,26 @@ class Multiple_Linear_Regrassion:
     def load_model(self):
         with open('../Models/model.pickle', 'rb') as handle:
             self.thetas = pickle.load(handle)
+
+    def visulaze(self,X_train,Y_train):
+        minimum = np.min(X_train,axis=0)
+        maximum = np.max(X_train,axis=0)
+        var = np.vstack((minimum,maximum))
+        ones_ = np.ones(var.shape[0])
+        X = np.c_[ones_,var]
+        result = np.dot(X,self.thetas)
+        points = np.c_[var,result]
+        ax = plt.axes(projection ='3d')
+    
+        ax.plot3D(points[:,0], points[:,1], points[:,2],c="r",marker="o")
+        ax.scatter3D(X_train[:,0], X_train[:,1], Y_train)
+        ax.set_title("This dataset have two independed features (x1,x2)\nand one depended variable (Y)")
+        ax.set_xlabel('X1',fontsize=20,labelpad=12)
+        ax.set_ylabel('X2',fontsize=20,labelpad=12)
+        ax.set_zlabel('Y',fontsize=20,labelpad=12)
+        plt.show()
+
+
 
 
 
