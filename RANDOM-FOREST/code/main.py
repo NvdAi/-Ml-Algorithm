@@ -9,7 +9,6 @@ for i in range(10):
     LABELS = DATA[:,DATA.shape[1]-1]
     train_data, test_data, train_labels, test_labels = train_test_split(DATA, LABELS, train_size=0.8, test_size=0.2, random_state=None)
 
-
     RF_MODEL = RF(80)
     RF_MODEL.fit(train_data, train_labels)
     RF_MODEL.save_model()

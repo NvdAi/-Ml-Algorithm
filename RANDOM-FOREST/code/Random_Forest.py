@@ -7,7 +7,7 @@ import pickle
 import os
 
 class RF():
-    def __init__(self, percent=50):
+    def __init__(self, percent=80):
         self.percent = percent
         self.models = []
         self.trees_pred = 0

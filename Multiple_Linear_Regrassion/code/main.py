@@ -39,13 +39,3 @@ RMSE = MLR_1.accuracy(prediction,Y_test)  # Root Mean Squared Error
 print("RMSE:",RMSE)
 MLR_1.visulaze(X_train,Y_train)
 
-
-
-
-
-
-
-
-
-
-

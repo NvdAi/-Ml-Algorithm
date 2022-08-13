@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import itertools as it
 import os 
 import pickle
 
@@ -46,27 +47,14 @@ class Multiple_Linear_Regrassion:
             self.thetas = pickle.load(handle)
 
     def visulaze(self,X_train,Y_train):
-        minimum = np.min(X_train,axis=0)
-        maximum = np.max(X_train,axis=0)
-        var = np.vstack((minimum,maximum))
-        ones_ = np.ones(var.shape[0])
-        X = np.c_[ones_,var]
-        result = np.dot(X,self.thetas)
-        points = np.c_[var,result]
+        xx, yy = np.meshgrid(range(-5,80), range(-5,35))
+        z = (-self.thetas[1] * xx - self.thetas[2] * yy - self.thetas[0]) * 1. /(-1)
         ax = plt.axes(projection ='3d')
-    
-        ax.plot3D(points[:,0], points[:,1], points[:,2],c="r",marker="o")
-        ax.scatter3D(X_train[:,0], X_train[:,1], Y_train)
+        ax.plot_surface(xx, yy, z, alpha=0.2, color='b')
+        ax.scatter3D(X_train[:,0], X_train[:,1], Y_train,c="r")
         ax.set_title("This dataset have two independed features (x1,x2)\nand one depended variable (Y)")
         ax.set_xlabel('X1',fontsize=20,labelpad=12)
         ax.set_ylabel('X2',fontsize=20,labelpad=12)
         ax.set_zlabel('Y',fontsize=20,labelpad=12)
         plt.show()
-
-
-
-
-
-
-
 
