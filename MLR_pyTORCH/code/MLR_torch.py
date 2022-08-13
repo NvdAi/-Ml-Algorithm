@@ -39,9 +39,15 @@ for epoch in range(800):
 
 print("=============================")
 
+
+print(our_model)
+tetha_0 = our_model.linear.bias
+tetha_1 = our_model.linear.weight
+
 parametrs_list = []
 for name, param in our_model.named_parameters():
 	parametrs_list.append(param)
+
 
 def visulyze(parametrs_list,x,y):
 	plt.scatter(x,y)
