@@ -44,6 +44,10 @@ for epoch in range(20000):
 
 print("=============================")
 
+print(our_model)
+tetha_0 = our_model.linear.bias
+tetha_12 = our_model.linear.weight
+
 parametrs_list = []
 for name, param in our_model.named_parameters():
     p=param.detach().numpy()
