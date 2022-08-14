@@ -31,9 +31,9 @@ def visulyze(tetha_0,tetha_1,x,y):
 def read_data(dirc):
 	df = pd.read_csv(dirc)
 	columns = df.columns.values
-	x = df.loc[:,columns[1]]
-	y = df.loc[:,columns[2]]
-	x =  x.values.reshape(x.shape[0],1)
+	x = df.loc[:,columns[1]:columns[columns.shape[0]-2]]
+	y = df.loc[:,columns[-1]]
+	x =  x.values.reshape(x.shape[0],x.shape[1])
 	y =  y.values.reshape(y.shape[0],1)
 	x_data = Variable(torch.Tensor(x))
 	y_data = Variable(torch.Tensor(y))
@@ -73,7 +73,7 @@ for epoch in range(n_epoch):
 print("================ Model trained ===================")
 tetha_0 = our_model.linear.bias
 tetha_1 = our_model.linear.weight
-print("Intereptc:",tetha_0.item(),"\nCoefficients(theta_1):",tetha_1.item())
+print("Intereptc:",tetha_0.item(),"\nCoefficients(tetha_1):",tetha_1.item())
 visulyze(tetha_0,tetha_1,xp,y_data)
 plt.show()	
 
