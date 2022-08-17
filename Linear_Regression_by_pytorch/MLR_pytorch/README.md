@@ -11,3 +11,15 @@ PyTorch is an open source machine learning library that specializes in tensor co
 * step_4 : define model,criterion,optimizer. i used to MSE loss function for criterion, and Adam method for optimizer.
 * step_5 : In the main part of the code i have implemented two "for" loops. in each iteration of the inner loop, i give a batch size of data to the input of the model and for each specified number of outer loop i drew the plane using grid parameters and saved the figure.
 and finally, i made a video from the saved figures as the output of the model.
+* important point : you have to tion tha parameters (Learning reat, batch size,n_epoch) according to your dataset.
+
+## Demo1:
+This is an output video created from the  some selected epoch 
+
+[![view](https://img.youtube.com/vi/AL0ZHEvjZQo/0.jpg))](https://youtu.be/AL0ZHEvjZQo)
+
+
+##### figures:
+<img src="data/Figure_2.png" width="1200" height="600">
+<img src="data/Figure_3.png" width="1200" height="600">
+<img src="data/Figure_1.png" width="1200" height="600">

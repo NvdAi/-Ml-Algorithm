@@ -6,8 +6,8 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 from torch.autograd import Variable
-import matplotlib
-matplotlib.use('Agg')
+# import matplotlib
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
  
@@ -33,7 +33,7 @@ def generate_video():
 	images = sorted(images,key=lambda fname: int(fname.split('.')[0]))
 	frame = cv2.imread(os.path.join(image_folder, images[0]))
 	height, width, layers = frame.shape  
-	video = cv2.VideoWriter(video_name, 0, 10, (width, height)) 
+	video = cv2.VideoWriter(video_name, 0, 1, (width, height)) 
 	for image in images: 
 		video.write(cv2.imread(os.path.join(image_folder, image))) 
 	cv2.destroyAllWindows() 
@@ -41,9 +41,9 @@ def generate_video():
 
 def visualize(point_lists,xp,y_data,i,epo,n_epoch):
 	ax = plt.axes(projection ='3d')
-	color,alpha = ("y",0.2)
+	color,alpha = ("g",0.3)
 	if epo==n_epoch-1:
-		color,alpha = ("b",0.5)
+		color,alpha = ("b",0.6)
 	ax.plot_surface(point_lists[0][0], point_lists[1][0], point_lists[2][0], alpha=alpha, color=color)
 	ax.scatter3D(xp[:,0], xp[:,1],y_data,c="r")
 	ax.set_xlim([0, 85])
@@ -82,13 +82,13 @@ def read_data(dirc):
 
 x_data , y_data = read_data('../data/heart.data.csv')
 xp = x_data # >> for plot;beacuse x_data must be shuffle
-
+ 
 # define parameters
 input_size, output_size = (x_data.shape[1],y_data.shape[1])
-learning_rate = 0.01
-n_epoch = 20000
-batch_size = 166
-EIO = 100           # Every itreation once plot
+learning_rate = 0
+n_epoch = 0
+batch_size = 0
+EIO = 0           # Every itreation once plot
 iteration = int(x_data.shape[0]/batch_size)
 tetha_0,tetha_12 = 0,0  #we have to find thiese
 
@@ -98,10 +98,7 @@ criterion = torch.nn.MSELoss(size_average = True)
 optimizer = torch.optim.Adam(our_model.parameters(), lr = learning_rate)
 i = 0
 for epoch in range(n_epoch):
-	# start,stop = (0,0)
 	for iteer in range(iteration):
-		# X = x_data[0+start:batch_size+stop]
-		# Y = y_data[0+start:batch_size+stop]
 		start_idx = iteer * batch_size 
 		stop_idx = (iteer+1) * batch_size 
 		X = x_data[start_idx:stop_idx]
@@ -112,9 +109,9 @@ for epoch in range(n_epoch):
 		loss.backward()
 		optimizer.step()
 		print('epoch {}, iteration {}, loss {}'.format(epoch, iteer, loss.item()))
-	x_data = x_data[torch.randperm(x_data.size()[0])]     # shuffle 
+	# x_data = x_data[torch.randperm(x_data.size()[0])]     # shuffle 
 	print("=============================================")
-	ls=[1,2,3,4,5]
+	ls=[1,2,3,4,5,6,7,8,9]
 	if (epoch %EIO==0 or epoch==n_epoch-1) or (epoch in ls):
 		point_lists = [[],[],[]]
 		tetha_0 = our_model.linear.bias.tolist()[0]
