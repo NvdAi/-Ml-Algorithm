@@ -54,8 +54,11 @@ def visualize(point_lists,xp,y_data,i,epo,n_epoch):
 	save_frames_path = "../data/figures"
 	os.makedirs(save_frames_path, exist_ok=True)
 	ax.figure.savefig(save_frames_path + "/" + str(i) +  ".png")
-	ax.destroyAllWindows()
-	print("sived figure :",i)
+	if epo==n_epoch-1:
+		pass
+	else:
+		plt.close('all')
+	print("sived figure :",i , "   epoch:",epo)
 			
 def drow_surface(tetha_0, tetha_12, point_lists):
 	xx, yy = np.meshgrid(range(-5,80), range(-5,35))
@@ -77,13 +80,15 @@ def read_data(dirc):
 
 x_data , y_data = read_data('../data/heart.data.csv')
 xp = x_data # >> for plot;beacuse x_data must be shuffle
+
 # define parameters
 input_size, output_size = (x_data.shape[1],y_data.shape[1])
-learning_rate = 0.01
-n_epoch = 300
-batch_size = 25
-EIO = 25             # Every itreation once plot
+learning_rate = 0.001
+n_epoch = 2000
+batch_size = 80
+EIO = 100           # Every itreation once plot
 iteration = int(x_data.shape[0]/batch_size)
+tetha_0,tetha_12 = 0,0  #we have to find thiese
 
 #define model
 our_model = LinearRegressionModel(input_size,output_size)
@@ -100,21 +105,23 @@ for epoch in range(n_epoch):
 		optimizer.zero_grad()
 		loss.backward()
 		optimizer.step()
-		# print('epoch {}, iteration {}, loss {}'.format(epoch, iteer, loss.item()))
-	x_data = x_data[torch.randperm(x_data.size()[0])]  # shuffle data
-	if epoch %EIO==0 or epoch==n_epoch-1:
-		# print("=============================================")
+		print('epoch {}, iteration {}, loss {}'.format(epoch, iteer, loss.item()))
+	x_data = x_data[torch.randperm(x_data.size()[0])]     # shuffle 
+	print("=============================================")
+	ls=[1,2,3,4,5]
+	if (epoch %EIO==0 or epoch==n_epoch-1) or (epoch in ls):
 		point_lists = [[],[],[]]
 		tetha_0 = our_model.linear.bias.tolist()[0]
 		tetha_12 = our_model.linear.weight.tolist()[0]
-		# print("Intereptc:",tetha_0,"\nCoefficients(tetha_1....tetha2):",tetha_12)
 		drow_surface(tetha_0, tetha_12, point_lists)
-		print("=============================================")
 		visualize(point_lists,xp,y_data,i,epoch,n_epoch)
 		i+=1
+		print("=============================================")
 
 print("=================== Model trained ========================")
 generate_video()
+print("Intereptc:",tetha_0,"\nCoefficients(tetha_1....tetha2):",tetha_12)
+plt.show()
 
 '''
 Intereptc: 15.01642374536851 
