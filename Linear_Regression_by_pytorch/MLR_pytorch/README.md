@@ -19,7 +19,7 @@ This is an output video created from the  some selected epoch
 [![view](https://img.youtube.com/vi/AL0ZHEvjZQo/0.jpg))](https://youtu.be/AL0ZHEvjZQo)
 
 
-##### figures:
+##### The final figure from different angles:
 <img src="data/Figure_2.png" width="1200" height="600">
 <img src="data/Figure_3.png" width="1200" height="600">
 <img src="data/Figure_1.png" width="1200" height="600">
