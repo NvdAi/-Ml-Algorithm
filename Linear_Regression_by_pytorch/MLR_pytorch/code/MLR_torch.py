@@ -6,6 +6,8 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 from torch.autograd import Variable
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
  
@@ -31,7 +33,7 @@ def generate_video():
 	images = sorted(images,key=lambda fname: int(fname.split('.')[0]))
 	frame = cv2.imread(os.path.join(image_folder, images[0]))
 	height, width, layers = frame.shape  
-	video = cv2.VideoWriter(video_name, 0, 1, (width, height)) 
+	video = cv2.VideoWriter(video_name, 0, 10, (width, height)) 
 	for image in images: 
 		video.write(cv2.imread(os.path.join(image_folder, image))) 
 	cv2.destroyAllWindows() 
@@ -83,9 +85,9 @@ xp = x_data # >> for plot;beacuse x_data must be shuffle
 
 # define parameters
 input_size, output_size = (x_data.shape[1],y_data.shape[1])
-learning_rate = 0.001
-n_epoch = 2000
-batch_size = 80
+learning_rate = 0.01
+n_epoch = 20000
+batch_size = 166
 EIO = 100           # Every itreation once plot
 iteration = int(x_data.shape[0]/batch_size)
 tetha_0,tetha_12 = 0,0  #we have to find thiese
@@ -96,10 +98,14 @@ criterion = torch.nn.MSELoss(size_average = True)
 optimizer = torch.optim.Adam(our_model.parameters(), lr = learning_rate)
 i = 0
 for epoch in range(n_epoch):
-	start,stop = (0,0)
+	# start,stop = (0,0)
 	for iteer in range(iteration):
-		X = x_data[0+start:batch_size+stop]
-		Y = y_data[0+start:batch_size+stop]
+		# X = x_data[0+start:batch_size+stop]
+		# Y = y_data[0+start:batch_size+stop]
+		start_idx = iteer * batch_size 
+		stop_idx = (iteer+1) * batch_size 
+		X = x_data[start_idx:stop_idx]
+		Y = y_data[start_idx:stop_idx]
 		pred_y = our_model(X)
 		loss = criterion(pred_y, Y)
 		optimizer.zero_grad()
