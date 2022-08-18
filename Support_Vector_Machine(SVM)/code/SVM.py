@@ -10,8 +10,8 @@ from sklearn.inspection import DecisionBoundaryDisplay
 DATA = np.loadtxt("../data/iris.txt")
 LABELS = DATA[:,DATA.shape[1]-1]
 X_train, X_test, y_train, y_test = train_test_split(DATA, LABELS, train_size=0.9, test_size=0.1, random_state=None)
-X_train = train_data[:,:2]
-X_test = test_data[:,:2]
+X_train = X_train[:,:2]
+X_test = X_train[:,:2]
 
 model = svm.LinearSVC()
 model.fit(X_train, y_train)
@@ -27,6 +27,9 @@ disp = DecisionBoundaryDisplay.from_estimator(model,X_train,response_method="pre
 plt.title("Multiple Classification\nSupport Vector Machine (SVM)")
 plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train)
 plt.show()
+
+
+
 
 # x_min, x_max = X_train[:, 0].min() - 1, X_train[:, 0].max() + 1
 # y_min, y_max = X_train[:, 1].min() - 1, X_train[:, 1].max() + 1
