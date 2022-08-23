@@ -30,9 +30,9 @@ class K_M :
 
 	def generate_video(self):
 		image_folder = '../data/figures/' 
-		outpot_path = '../data/outpot'
+		outpot_path = '../data/output'
 		os.makedirs(outpot_path, exist_ok=True)
-		video_name = os.path.join(outpot_path, " my_model_output.avi")
+		video_name = os.path.join(outpot_path, "my_model_output.avi")
 		images = [img for img in os.listdir(image_folder)
 				if img.endswith(".jpg") or
 					img.endswith(".jpeg") or
@@ -44,16 +44,15 @@ class K_M :
 		for image in images: 
 			video.write(cv2.imread(os.path.join(image_folder, image))) 
 		cv2.destroyAllWindows() 
-		video.release()  
+		video.release() 
+		return video_name 
 
 	def fit(self,X,labels,K):
 		c = np.random.randint(0,X.shape[0],(K))
 		centers = X[c]
+		save_frames_path = "../data/figures"
 		condition = 1
 		iteration = 1
-		# elevated_angle = 0
-
-		horizontal_angle = 0
 		while condition == 1:
 			labels = self.distande_calculatore(X,labels,K,centers)
 			self.all_labels.append(labels)
@@ -64,40 +63,21 @@ class K_M :
 			else:
 				centers = new_centers
 			
-			if X.shape[1]==3:
-					
-				fig = plt.figure(figsize=(10, 10))
-				ax = fig.add_subplot(projection='3d')
-				ax.scatter3D(X[:,0],X[:,1],X[:,2],c=labels)
-				ax.scatter3D(centers[:,0],centers[:,1],centers[:,2],c="r",s=200,marker="X")
-				ax.set_xlabel('X',fontsize=20,labelpad=12)
-				ax.set_ylabel('Y',fontsize=20,labelpad=12)
-				ax.set_zlabel('Z',fontsize=20, labelpad=12)
-				ax.view_init(0, 45)
-
-				save_frames_path = "../data/figures"
-				os.makedirs(save_frames_path, exist_ok=True)
-				ax.figure.savefig(save_frames_path + "/" + str(iteration) +  ".png")
-				plt.close('all')
-				print("sived figure :",iteration)
-				# elevated_angle += 20
-				horizontal_angle += 10
-				iteration+=1
-			else :
-				plt.scatter(X[:,0],X[:,1],c=labels)
-				plt.scatter(centers[:,0],centers[:,1],c="r",s=200,marker="X")
-				plt.xlabel('X',fontsize=20,labelpad=12)
-				plt.ylabel('Y',fontsize=20,labelpad=12)
-
-				save_frames_path = "../data/figures"
-				os.makedirs(save_frames_path, exist_ok=True)
-				plt.savefig(save_frames_path + "/" + str(iteration) +  ".png")
-				plt.close('all')
-				print("sived figure :",iteration)
-				iteration+=1				
+			plt.scatter(X[:,0],X[:,1],c=labels)
+			plt.scatter(centers[:,0],centers[:,1],c="r",s=200,marker="X")
+			plt.xlabel("X",fontsize=15)
+			plt.ylabel("Y",fontsize=15)
+			plt.title("K-MEANS\nRed X-Point Are Centers")
+			os.makedirs(save_frames_path, exist_ok=True)
+			plt.savefig(save_frames_path + "/" + str(iteration) +  ".png")
+			plt.close()
+			# print("sived figure :",iteration)
+			iteration+=1				
 
 		print("clusters are fixed")
-		self.generate_video()
-		return labels,centers
+		video_name = self.generate_video()
+		for f in os.listdir(save_frames_path):
+			os.remove(os.path.join(save_frames_path, f))
+		return labels,centers,video_name
 
 
