@@ -1,12 +1,6 @@
 
-import matplotlib.pyplot as plt
-from sklearn.datasets import make_blobs
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import numpy as np 
 import collections
-import random
-import statistics as st
 
 class Knn:
     def __init__(self, n_neighbors):
@@ -37,19 +31,5 @@ class Knn:
             predicted_labels.append(pred_label)
             LNP = []
         return predicted_labels
-
-
-if __name__ == "__main__":
-    DATA = ()
-    data_list  = ('X','Y' , 'x', 'y')
-    for i in data_list:
-        TEMP = np.loadtxt(i+'.txt')
-        DATA = DATA+(TEMP,)
-    train_data,train_labels, test_data,  test_labels = DATA
-    k_near_Neighbors = Knn(n_neighbors = 7)  
-    k_near_Neighbors.fit(train_data, train_labels)
-    predictions = k_near_Neighbors.predict(test_data,K=7)
-    accuracy = accuracy_score(predictions, test_labels)
-
 
 
