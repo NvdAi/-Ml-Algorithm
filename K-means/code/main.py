@@ -70,5 +70,5 @@ for i,(dataset, algo_params) in enumerate(datasets):
     else:
         axs[i+L].set_ylabel("Y",fontsize=15)
 
-plt.suptitle("Comparison K-MEANS and DBSCAN on difefrent data")
+plt.suptitle("Comparison K-MEANS and DBSCAN on different data")
 plt.show()

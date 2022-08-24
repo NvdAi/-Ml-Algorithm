@@ -14,8 +14,7 @@ and finally, i made a video from the saved figures as the output of the model.
 * important point : you have to tion tha parameters (Learning reat, batch size,n_epoch) according to your dataset.
 
 ## Demo1:
-This is an output video created from the  some selected epoch 
-
+This is an output video created from the  some selected epoch
 [![view](https://img.youtube.com/vi/AL0ZHEvjZQo/0.jpg))](https://youtu.be/AL0ZHEvjZQo)
 
 
